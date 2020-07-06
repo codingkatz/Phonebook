@@ -1,0 +1,49 @@
+<!-- <app-searchcontact (update)="term = $event"></app-searchcontact> (input)="update.emit(input.value)"-->
+<input type="text" minlength="50" style="font-size:small;" class="search" (input)=getEntry($event)/>
+<div class="address-list">
+    <ul>
+        <a *ngFor="let contact of this.entries">
+            <li (click)="onSelectionChange(contact)">
+                {{contact.name}}
+            </li>
+        </a>
+    </ul>
+</div>
+
+<a (click)="open(mymodal)" class="add-plus-link"></a>
+
+<ng-template #mymodal let-modal>
+    <div class="modal-header">
+      <h4 class="modal-title" id="modal-basic-title" style="color: black;">Add entry</h4>
+      <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+        <span aria-hidden="true">×</span>
+      </button>
+    </div>
+    <div class="modal-body" style="color: black;">
+        <form #entryForm="ngForm" novalidate>
+            <div class="form-group">
+              <label>Name</label>
+              <input type="text" required [class.is-invalid]="name.invalid && name.touched" class="form-control" pattern="^[a-zA-Z]+$" #name="ngModel" name="name" [(ngModel)]=entry.name>
+              <div *ngIf="name.errors && (name.invalid || name.touched)">
+                <small class="text-danger" *ngIf="name.errors.pattern">Name must be only letters with no spaces</small>
+                <small class="text-danger" *ngIf="name.errors.required">Name is required</small>
+              </div>
+            </div>
+            <div class="form-group">
+              <label >Phone Number</label>
+              <input type="text" required [class.is-invalid]="phone.invalid && phone.touched" class="form-control" #phone="ngModel" pattern="^\d{10}$" name="phone" [(ngModel)]=entry.phonenumber>
+              <div *ngIf="phone.errors && (phone.invalid || phone.touched)">
+                <small class="text-danger" *ngIf="phone.errors.pattern">Phone number must be 10 digits</small>
+                <small class="text-danger" *ngIf="phone.errors.required">Phone number is required</small>
+              </div>
+            </div>
+
+            <button type="button" style="float: right;" class="btn btn-danger" (click)="modal.close('Save click')">Close</button>
+            <button type="button" [disabled]="entryForm.form.invalid" class="btn btn-primary" (click)="saveEntry()">Save</button>
+        </form>
+    </div>
+</ng-template>
+
+
+
+
